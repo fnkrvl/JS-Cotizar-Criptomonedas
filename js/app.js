@@ -1,4 +1,7 @@
+const cotizador = new API('97e978832659196b417dac07f44297545f49d27075dec9009b1135faeadefa85') 
 const ui = new Interfaz()
+
+cotizador.obtenerMonedasAPI()
 
 // leer el formulario
 const formulario = document .querySelector('#formulario')
@@ -21,8 +24,9 @@ formulario.addEventListener('submit', (e) => {
         ui.mostrarMensaje('Ambos campos son obligatorios', 'alert bg-danger text-center')
     }else {
         console.log('Everything is ok')
+        cotizador.obtenerValores(monedaSeleccionada, criptomonedaSeleccionada)
+            .then(data => {
+                ui.mostrarResultado(data.resultado.RAW, monedaSeleccionada, criptomonedaSeleccionada)
+            })
     }
 })
-
-
-//

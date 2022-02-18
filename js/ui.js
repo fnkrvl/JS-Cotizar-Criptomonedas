@@ -1,81 +1,93 @@
-class Interfaz{
-    
-    constructor() {
-        this.init()
-    }
-    init() {
-        this.construirSelect()
-    }
+class Interfaz {
 
-    construirSelect() {
-        cotizador.obtenerMonedasAPI()
-            .then(monedas => {
-                // crear un select de opciones
-                const select = document.querySelector('#criptomoneda')
+     constructor() {
+          this.init();
+     }
+     init() {
+          this.construirSelect();
+     }
 
-                // iterar por los resultadoas de la api
-                for( const [key, value] of Object.entries(monedas,monedas.Data)) {
-                    // añadir el symbol y el nombre como opciones
-                    const opcion = document.createElement('option')
-                    opcion.value = value.Symbol
-                    opcion.appendChild(document.createTextNode(value.CoinName))
-                    select.appendChild(opcion)
-                }
-            })
-    }
+     construirSelect() {
+          cotizador.obtenerMonedasAPI()
+               .then(monedas => {
+                    
+                    // crear un select de opciones
+                    const select = document.querySelector('#criptomoneda');
 
-    mostrarMensaje(mensaje, clases) {
-        const div = document.createElement('div')
-        div.className = clases
-        div.appendChild(document.createTextNode(mensaje))
+                    // iterar por los resultados de la api
+                    for( const [key, value] of Object.entries(monedas.monedas.Data) ) {
+                         // añadir el Symbol y el Nombre como opciones
+                         const opcion = document.createElement('option');
+                         opcion.value = value.Symbol;
+                         opcion.appendChild(document.createTextNode(value.CoinName));
+                         select.appendChild(opcion);
+                    }
 
-        // seleccionar mensajes
-        const divMensaje = document.querySelector('.mensajes')
-        divMensaje.appendChild(div)
+               })
+     }
 
-        // Mostrar contenido
-        setTimeout(() => {
-            document.querySelector('.mensajes').remove()
-        }, 3000);
-    }
+     mostrarMensaje(mensaje, clases) {
+          const div = document.createElement('div');
+          div.className = clases;
+          div.appendChild(document.createTextNode(mensaje));
 
-    // imprime el resultado de la cotizacion
-    mostrarResultado(resultado, moneda, crypto) {
-        const resultadoAnterior = document.querySelector('resultado > div')
+          // seleccionar mensajes
+          const divMensaje = document.querySelector('.mensajes');
+          divMensaje.appendChild(div);
 
-        if(resultadoAnterior) {
-            resultadoAnterior.remove()
-        }
+          // mostrar contenido
+          setTimeout(() => {
+               document.querySelector('.mensajes div').remove();
+          }, 3000);
+     }
 
-        const datosMoneda = resultado[crypto][moneda]
+     // Imprime el resultado de la cotización
 
-        // Recortar digitos de precio
-        let precio = datosMoneda.PRICE.toFixed(2),
-            porcentaje = datosMoneda.CHANGEPCTDAY.toFixed(2),
-            actualizado = new Date(datosMoneda.LASTUPDATE * 1000).toLocaleDateString('es-AR')
+     mostrarResultado(resultado, moneda, crypto){
 
-        // Construir el template
-        let templateHTML = `
-            <div class="card bg-warning>
-                <div card-body text-light>
-                    <h2 class="card-tittle">Resultado:</h2>
-                    <p>El precio de ${datosMoneda.FROMSYMBOL} a moneda ${datosMoneda.TOSYMBOL} es de: ${precio}</p>
-                </div>            
-            </div>
-        `
+          // En caso de un resultado anterior, ocultarlo
+          const resultadoAnterior = document.querySelector('#resultado > div');
 
-        this.mostrarOcultarSpinner('block')
+          if(resultadoAnterior) {
+               resultadoAnterior.remove();
+          }
 
-        setTimeout(() => {
-            // insertar el resultado
-            document.querySelector('#resultado').innerHTML = templateHTML 
-            this.mostrarOcultarSpinner('none')
-        }, 3000); 
-    }
+          const datosMoneda = resultado[crypto][moneda];
 
-    // Mostrar un spinner de carga al enviar la cotización
-    mostrarOcultarSpinner(vista) {
-        const spinner = document.querySelector('.contenido-spinner')
-        spinner.style.display = vista
-    }
+          console.log(datosMoneda);
+
+          // recortar digitos de precio
+          let precio = datosMoneda.PRICE.toFixed(2),
+               porcentaje = datosMoneda.CHANGEPCTDAY.toFixed(2),
+               actualizado = new Date(datosMoneda.LASTUPDATE * 1000).toLocaleDateString('es-MX');
+
+
+          // construir el template
+          let templateHTML = `
+               <div class="card bg-warning">
+                    <div class="card-body text-light">
+                         <h2 class="card-title">Resultado:</h2>
+                         <p>El Precio de ${datosMoneda.FROMSYMBOL} a moneda ${datosMoneda.TOSYMBOL} es de: $ ${precio}</p>
+                         <p>Variación último día: %${porcentaje}</p>
+                         <p>Última Actualización: ${actualizado}</p>
+                    </div>
+               </div>
+          `;
+
+          this.mostrarOcultarSpinner('block');
+
+         setTimeout(() => {
+                // insertar el resultado
+               document.querySelector('#resultado').innerHTML = templateHTML;
+
+               // ocultar el spinner
+               this.mostrarOcultarSpinner('none');
+         }, 3000);
+     }
+
+     // Mostrar un spinner de carga al enviar la cotización
+     mostrarOcultarSpinner(vista) {
+          const spinner = document.querySelector('.contenido-spinner');
+          spinner.style.display = vista;
+     }
 }

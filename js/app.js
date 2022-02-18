@@ -1,32 +1,32 @@
-const cotizador = new API('97e978832659196b417dac07f44297545f49d27075dec9009b1135faeadefa85') 
-const ui = new Interfaz()
-
-cotizador.obtenerMonedasAPI()
+const cotizador = new API('API_AQUI');
+const ui = new Interfaz();
 
 // leer el formulario
-const formulario = document .querySelector('#formulario')
 
-// EventListener
+const formulario = document.querySelector('#formulario');
+// eventlistener
 formulario.addEventListener('submit', (e) => {
-    e.preventDefault()
+     e.preventDefault();
 
-    // leer la moneda seleccionada
-    const monedaSelect = document.querySelector('#moneda')
-    const monedaSeleccionada = monedaSelect.options[monedaSelect.selectedIndex].value
-    console.log(monedaSeleccionada)
+     // leer la moneda seleccionada
+     const monedaSelect = document.querySelector('#moneda');
+     const monedaSeleccionada = monedaSelect.options[monedaSelect.selectedIndex].value;
 
-    // leer la criptomoneda seleccionada
-    const criptomonedaSelect = document.querySelector('#criptomoneda')
-    const criptomonedaSeleccionada = criptomonedaSelect.options[criptomonedaSelect.selectedIndex].value
-    console.log(criptomonedaSeleccionada)
+     // leer la criptomoneda seleccionada
+     const criptoMonedaSelect = document.querySelector('#criptomoneda');
+     const criptoMonedaSeleccionada = criptoMonedaSelect.options[criptoMonedaSelect.selectedIndex].value;
+     
+     // comprobar que ambos campos tengan algo seleccionado
+     if(monedaSeleccionada === '' || criptoMonedaSeleccionada === '') {
+          // arrojar una alerta de error
+          ui.mostrarMensaje('Ambos Campos son Obligatorios', 'alert bg-danger text-center');
+     } else {
+          // todo bien, consultar la api
+          cotizador.obtenerValores(monedaSeleccionada, criptoMonedaSeleccionada) 
+               .then(data => {
+                    ui.mostrarResultado(data.resultado.RAW,monedaSeleccionada, criptoMonedaSeleccionada );
+               })
+     }
 
-    if(monedaSeleccionada === '' && criptomonedaSeleccionada === '') {
-        ui.mostrarMensaje('Ambos campos son obligatorios', 'alert bg-danger text-center')
-    }else {
-        console.log('Everything is ok')
-        cotizador.obtenerValores(monedaSeleccionada, criptomonedaSeleccionada)
-            .then(data => {
-                ui.mostrarResultado(data.resultado.RAW, monedaSeleccionada, criptomonedaSeleccionada)
-            })
-    }
+
 })

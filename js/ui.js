@@ -41,7 +41,41 @@ class Interfaz{
 
     // imprime el resultado de la cotizacion
     mostrarResultado(resultado, moneda, crypto) {
+        const resultadoAnterior = document.querySelector('resultado > div')
 
+        if(resultadoAnterior) {
+            resultadoAnterior.remove()
+        }
+
+        const datosMoneda = resultado[crypto][moneda]
+
+        // Recortar digitos de precio
+        let precio = datosMoneda.PRICE.toFixed(2),
+            porcentaje = datosMoneda.CHANGEPCTDAY.toFixed(2),
+            actualizado = new Date(datosMoneda.LASTUPDATE * 1000).toLocaleDateString('es-AR')
+
+        // Construir el template
+        let templateHTML = `
+            <div class="card bg-warning>
+                <div card-body text-light>
+                    <h2 class="card-tittle">Resultado:</h2>
+                    <p>El precio de ${datosMoneda.FROMSYMBOL} a moneda ${datosMoneda.TOSYMBOL} es de: ${precio}</p>
+                </div>            
+            </div>
+        `
+
+        this.mostrarOcultarSpinner('block')
+
+        setTimeout(() => {
+            // insertar el resultado
+            document.querySelector('#resultado').innerHTML = templateHTML 
+            this.mostrarOcultarSpinner('none')
+        }, 3000); 
     }
 
+    // Mostrar un spinner de carga al enviar la cotización
+    mostrarOcultarSpinner(vista) {
+        const spinner = document.querySelector('.contenido-spinner')
+        spinner.style.display = vista
+    }
 }
